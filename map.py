@@ -5,9 +5,7 @@ pen = turtle.Turtle()
 wn=turtle.Screen()
 #小格子宽度
 distance =50
-
-
-
+grid=[[]]
 
 #正方形
 def draw(x,y,dist):
@@ -65,16 +63,27 @@ def turn(x, y):
 
 def setObstacles(count):
     for i in range(count):
-        x = random.randint(1,11)*distance
-        y = random.randint(1,11)*distance
-        drawFill(x-300,y-300,distance,'black')
+        x = random.randrange(0,12)
+        y = random.randrange(0,12)
+        drawFill(x*distance-300,y*distance-300,distance,'black')
+        grid[x][y]=1
 
 def initStartEnd():
     pen.speed(0)
     drawFill(-300,-300,distance,'green')
     drawFill(200,250,distance,'red')
 
+
+def initGrid(size):
+    x = []
+    for i in range(size):
+        x.append(0)
+
+    for i in range(size):
+        grid.insert(i,x)
+
 if __name__ == "__main__" :
+    initGrid(12)
     wn.screensize()
     wn.setup(width = 1.0, height = 1.0)
     turtle.onclick(turn)
@@ -82,7 +91,7 @@ if __name__ == "__main__" :
     sc.setup(650,650)
     drawFast(-300,-300,12)
     initStartEnd()
-    setObstacles(30)
+    setObstacles(5)
     pen.hideturtle()
 turtle.done()
 
