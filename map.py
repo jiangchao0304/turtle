@@ -60,7 +60,7 @@ def turn(x, y):
 # 打印当前坐标
    print('x=', x, 'y=', y)
 
-
+#设置随机障碍
 def setObstacles(count):
     for i in range(count):
         x = random.randrange(0,12)
@@ -73,6 +73,29 @@ def initStartEnd():
     drawFill(-300,-300,distance,'green')
     drawFill(200,250,distance,'red')
 
+#计算最短路径
+def bfs(begin,end,graph):
+    dir = [[0, 1],[1, 0],[0, -1], [-1, 0]]  # 四个方向，D,L,R,U 
+    queue =[]
+    visit = []
+    result = []
+    queue.append(begin)
+    visit.append(begin)
+    while queue:
+        node = queue.pop(0)
+        x=node[0]
+        y=node[1]
+        for i in dir:
+            if x+i[0] < len(graph)-1 and y+i[1]< len(graph)-1  and x+i[0]>=0  and y+i[1]>=0:
+               if [x+i[0],y+i[1]] not in visit:
+                  visit.append([x+i[0],y+i[1]]) 
+                  queue.append([x+i[0],y+i[1]])
+                  print  ([x+i[0],y+i[1]]) 
+                  #queue.insert(0,[x+i[0],y+i[1]]) 
+        result.append(node)         
+        #print(visit)
+        #print(queue)
+        print (11111111)
 
 def initGrid(size):
     x = []
@@ -83,7 +106,8 @@ def initGrid(size):
         grid.insert(i,x)
 
 if __name__ == "__main__" :
-    initGrid(12)
+    initGrid(3)
+    bfs([0,0],[3,3],grid)
     wn.screensize()
     wn.setup(width = 1.0, height = 1.0)
     turtle.onclick(turn)
