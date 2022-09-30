@@ -5,7 +5,7 @@ pen = turtle.Turtle()
 wn=turtle.Screen()
 #小格子宽度
 distance =50
-grid=[[]]
+grid = [[]]
 
 #正方形
 def draw(x,y,dist):
@@ -78,7 +78,8 @@ def bfs(begin,end,graph):
     dir = [[0, 1],[1, 0],[0, -1], [-1, 0]]  # 四个方向，D,L,R,U 
     queue =[]
     visit = []
-    result = []
+    pathDic={}
+    pathResult=[end]
     queue.append(begin)
     visit.append(begin)
     while queue:
@@ -86,36 +87,56 @@ def bfs(begin,end,graph):
         x=node[0]
         y=node[1]
         for i in dir:
-            if x+i[0] < len(graph)-1 and y+i[1]< len(graph)-1  and x+i[0]>=0  and y+i[1]>=0:
+            #判断边界
+            if x+i[0] < len(graph) and y+i[1]< len(graph)  and x+i[0]>=0  and y+i[1]>=0:
+               if  graph[x+i[0]][y+i[1]]==1:
+                   continue
+
                if [x+i[0],y+i[1]] not in visit:
                   visit.append([x+i[0],y+i[1]]) 
                   queue.append([x+i[0],y+i[1]])
+                  pathDic[x+i[0],y+i[1]] = node
                   print  ([x+i[0],y+i[1]]) 
                   #queue.insert(0,[x+i[0],y+i[1]]) 
-        result.append(node)         
-        #print(visit)
-        #print(queue)
-        print (11111111)
+    #倒叙遍历出路径
+    lastXYParent= pathDic.get(list(pathDic.keys())[-1])
+    while lastXYParent[0]!=0 or lastXYParent[1]!=0:
+           pathResult.insert(0,lastXYParent)
+           lastXYParent = pathDic.get((lastXYParent[0],lastXYParent[1]))
+    print (pathResult)       
+    return pathResult
 
-def initGrid(size):
-    x = []
-    for i in range(size):
-        x.append(0)
+def drawBfs(begin,end,graph):
+    pathResul= bfs(begin,end,graph)
+    for i in range(0, len(pathResul)):
+      drawFill(pathResul[i][0]*distance-300,pathResul[i][1]*distance-300,distance,'blue')
+      print (i, pathResul[i])
+    print('完成')
+    
 
-    for i in range(size):
-        grid.insert(i,x)
 
-if __name__ == "__main__" :
-    initGrid(3)
-    bfs([0,0],[3,3],grid)
-    wn.screensize()
-    wn.setup(width = 1.0, height = 1.0)
-    turtle.onclick(turn)
+
+
+
+def initGrid(lsize,wsize):
+    global grid 
+    grid = [[0 for x in range(lsize)] for x in range(wsize)]
+    #wn.screensize()
+    #wn.setup(width = 1.0, height = 1.0)
+    #turtle.onclick(turn)
     pen.speed(0)
-    sc.setup(650,650)
+    #窗体大小
+    turtle.setup(width=800,height=800, startx=0, starty=0)
+    turtle.screensize(800, 600)  
+    #sc.setup(600,600)
     drawFast(-300,-300,12)
     initStartEnd()
-    setObstacles(5)
+    setObstacles(30)
+
+
+if __name__ == "__main__" :
+    initGrid(12,12)
+    drawBfs([0,0],[11,11],grid)
     pen.hideturtle()
 turtle.done()
 
